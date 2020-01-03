@@ -1,0 +1,23 @@
+{% extends "basepage.html" %}
+
+{% block content %}
+<div class = "formwrapper">
+    <h1>Main Menu</h1>
+    <p>Select two teams for your matchup</p>
+    <form action="" method="post">
+		<p>
+		<!-- "form" is a variable that we define in the render_template function in 'testing.py' -->
+            {{ form.team1_selection() }}
+            {{ form.team2_selection() }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    
+    {% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
+</div>
+{% endfor %}
+
+{% endblock %}

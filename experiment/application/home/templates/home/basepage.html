@@ -1,0 +1,17 @@
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Microblog</title>
+      {% else %}
+      <title>CFB Matchups </title>
+      {% endif %}
+    </head>
+    <body>
+        <div>banner1: 
+		<!-- these are the paths specified in the app.routes on the controller/test py module -->
+		<a href="/">Home</a>
+		<a href="/main_menu">Main Menu</a>
+		</div>
+        {% block content %}{% endblock %}
+    </body>
+</html>

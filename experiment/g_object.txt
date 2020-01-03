@@ -1,0 +1,3 @@
+solutions to importing and using db connections within app_context blueprints
+a) utilize the g object of the application context. I may need to specifically store the connection object in an element of g. Note: g functions like dictionary: data is stored within it as key,value pair
+reource: https://flask.palletsprojects.com/en/1.0.x/appcontext/
