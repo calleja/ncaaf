@@ -4,13 +4,29 @@
 <div class = "formwrapper">
     <h1>Main Menu</h1>
     <p>Select two teams for your matchup</p>
-    <form action="" method="post">
+    <form action="" method="POST">
 		<p>
 		<!-- "form" is a variable that we define in the render_template function in 'testing.py' -->
-            {{ form.team1_selection() }}
-            {{ form.team2_selection() }}
+		{{ form.team1_selection.label }}
+            {{ form.team1_selection }}
+            {% if form.team1_selection.errors %}
+        <ul class="errors">
+          {% for error in form.team1_selection.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+            {% endif %}
+            
+            {{ form.team2_selection.label }}{{ form.team2_selection }}
+            {% if form.team2_selection.errors %}
+        <ul class="errors">
+          {% for error in form.team2_selection.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
         </p>
-        <p>{{ form.submit() }}</p>
+        <p>{{ form.submit }}</p>
     </form>
     
     {% for message in get_flashed_messages() %}

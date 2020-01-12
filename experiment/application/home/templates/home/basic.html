@@ -1,0 +1,14 @@
+{% extends "basepage.html" %}
+
+{% block content %}
+<div class = "formwrapper">
+    <h1>SURPRISE</h1>
+        
+    {% for message in get_flashed_messages() %}
+<div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
+</div>
+{% endfor %}
+
+{% endblock %}

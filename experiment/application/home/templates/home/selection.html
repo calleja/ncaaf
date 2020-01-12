@@ -1,0 +1,24 @@
+{% extends "basepage.html" %}
+
+{% block content %}
+
+<title>Your Query</title>
+
+
+<body>
+    <div>
+        <p> Opponent 1 is: {{ opponent_html1 }} and opponent 2 is {{ opponent_html2 }} </p>
+        <!--
+        <ul>
+            {% for contact in contacts %}
+            <li>{{ contact }}</li>
+            {% endfor %}
+        </ul>
+        -->
+    </div>
+    <div>
+    <a href="{{ url_for('hello_bp.teamsSelected', opponent1 = opponent_html1, opponent2 = opponent_html2 ) }}">View Team Stats</a>
+    </div>
+</body>
+
+{% endblock %}

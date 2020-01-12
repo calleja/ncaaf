@@ -1,0 +1,28 @@
+{% extends "basepage.html" %}
+
+{% block content %}
+
+<title>Stats Table</title>
+
+<body>
+    <div>
+<table>
+<!-- a table with four columns -->
+    {% for dic1, dic2 in zippedlist %}
+    <tr>
+<td valign="top"> {{ dic1['statlabel'] }}</td> <td>{{ dic1['Rank'] }}
+<td>                                                    </td>
+<td valign="top"> {{ dic2['statlabel'] }}</td> <td>{{ dic2['Rank'] }}
+    </tr>
+    {% endfor %}
+</table>        
+    </div>
+    
+</body>
+
+{% endblock %}
+
+
+
+
+
