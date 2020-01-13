@@ -22,7 +22,8 @@ def get_db(app):
     
 def create_app():
     """Initialize the core application. Funct is called from wsgi.py"""
-    app = Flask(__name__, instance_relative_config=False)
+    #must set static_folder to None or blueprint specific static folders will be overriden
+    app = Flask(__name__, instance_relative_config=False, static_folder = None)
     app.config.from_object('config.Config') #a class sitting at the top-most directory (config.py); app.config is directory aware 
     
     # Initialize Plugins

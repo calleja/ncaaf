@@ -1,0 +1,30 @@
+{% extends "basepage.html" %}
+
+{% block content %}
+
+<title>Stats Table</title>
+<link rel="stylesheet" href="{{ url_for('hello_bp.static', filename='ncaaf.css') }}">
+<body>
+    <div class = "leftTable">
+<table>
+<th> {{ teamNameList[0] }} </th><th></th>
+    {% for dic1 in containedList[0] %}
+    <tr>
+<td valign="top"> {{ dic1['statlabel'] }}</td> <td>{{ dic1['Rank'] }}
+    </tr>
+    {% endfor %}
+</table>        
+    </div>
+
+
+<div class = "rightTable">
+<table>
+<th> {{ teamNameList[1] }} </th><th></th>
+    {% for dic1 in containedList[1] %}    
+<tr><td>{{ dic1['statlabel'] }}</td> <td>{{ dic1['Rank'] }}
+<td>                                                   
+    </tr>
+    {% endfor %}
+</body>
+
+{% endblock %}

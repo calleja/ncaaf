@@ -11,7 +11,7 @@ from application import mongo
 
 #name of Blueprint obj = "hello_bp"
 hello_bp = Blueprint('hello_bp', __name__,
-                     template_folder='templates')
+                     template_folder='templates', static_folder='static')
 
 select_dict = {}
 
@@ -34,12 +34,12 @@ def landing():
     teamlist = sorted(list(mongo.db['teststats'].distinct('teamname')))
     #convert list to a list of tuples... THIS NEEDS TO BE TESTED AGAIN
     team_tups = [(i,val) for i, val in enumerate(teamlist,1)]
-    form.team2_selection.choices = team_tups
     form.team1_selection.choices = team_tups
+    form.team2_selection.choices = team_tups
     if form.validate_on_submit():
     #need to store user selection
-        opponent2 = dict(team_tups).get(form.team2_selection.data)
         opponent1 = dict(team_tups).get(form.team1_selection.data)
+        opponent2 = dict(team_tups).get(form.team2_selection.data)
         #render results output and pass the selection values
         teams = [opponent1, opponent2]
         print("from landing route, teams are of type {}: {}".format(type(teams),teams))
@@ -95,6 +95,6 @@ def teamsSelected(opponent1, opponent2):
         tm1_sorted = [stat for i in sorted_list for stat in team1_li if stat['statlabel'] ==i]
     #iterate two objects: 1) stats headers 2) stats dict for the team
         tm2_sorted = [stat for i in sorted_list for stat in team2_li if stat['statlabel'] ==i]
-        return((tm1_sorted,tm2_sorted))
-    team1, team2 = extractToCSV(opponent1, opponent2)
-    return render_template('/home/oneTable.html', zippedlist = zip(team1, team2)) 
+        return((new_team1, new_team2, tm1_sorted,tm2_sorted))
+    teamName1, teamName2, team1, team2 = extractToCSV(opponent1, opponent2)
+    return render_template('/home/twoTable.html', containedList = [team1, team2], teamNameList = [teamName1, teamName2]) 
