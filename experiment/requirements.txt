@@ -1,7 +1,7 @@
 # packages in environment at /home/merde/anaconda3/envs/flask:
 #
 # Name                    Version                   Build  Channel
-_libgcc_mutex             0.1                        main  
+#_libgcc_mutex             0.1                        main  
 blas                      1.0                         mkl  
 ca-certificates           2020.1.1                      0  
 certifi                   2019.11.28               py37_0  
