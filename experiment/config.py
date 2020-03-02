@@ -25,7 +25,9 @@ class Config:
     COMPRESSOR_DEBUG = environ.get('COMPRESSOR_DEBUG')
     '''
     #Database
-    MONGO_URI = "mongodb://localhost:27017/stageprod_agg"
+    #MONGO_URI = "mongodb://localhost:27017/stageprod_agg"
+    #flask configuration variable
+    MONGO_URI = "mongodb+srv://luis-owner:persyy1981@cluster0-rpjy6.mongodb.net/test?retryWrites=true&w=majority"
     
   
     
