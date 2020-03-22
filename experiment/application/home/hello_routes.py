@@ -69,7 +69,7 @@ def statsLink():
 @hello_bp.route('/selectedTeamStats/<opponent1>/<opponent2>', methods = ['GET','POST'])
 def teamsSelected(opponent1, opponent2):    
     def extractToCSV(opponent1, opponent2):
-        ''' 1. query the database and extract team stats  a/o latest date
+        ''' 1. query the database and extract team stats a/o latest date
     2. separate each team into its own container
     3. sort the container so that team list matches same order
     4. measure the longest dict in ea container
@@ -96,5 +96,8 @@ def teamsSelected(opponent1, opponent2):
     #iterate two objects: 1) stats headers 2) stats dict for the team
         tm2_sorted = [stat for i in sorted_list for stat in team2_li if stat['statlabel'] ==i]
         return((new_team1, new_team2, tm1_sorted,tm2_sorted))
+        #function extractToCSV terminated w/above line
+        
     teamName1, teamName2, team1, team2 = extractToCSV(opponent1, opponent2)
+    #teamName1 and teamName2 above are the data tables
     return render_template('/home/twoTable.html', containedList = [team1, team2], teamNameList = [teamName1, teamName2]) 
