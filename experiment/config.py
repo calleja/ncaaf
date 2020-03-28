@@ -27,7 +27,7 @@ class Config:
     #Database
     #MONGO_URI = "mongodb://localhost:27017/stageprod_agg"
     #flask configuration variable
-    MONGO_URI = "mongodb+srv://luis-owner:persyy1981@cluster0-rpjy6.mongodb.net/test?retryWrites=true&w=majority"
+    MONGO_URI = "mongodb+srv://luis-owner:persyy1981@cluster0-rpjy6.mongodb.net/stageprod_agg?retryWrites=true&w=majority"
     
   
     
