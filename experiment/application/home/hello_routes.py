@@ -4,7 +4,9 @@ from datetime import datetime
 import numpy as np
 import os
 import pymongo
+import plotly.express as px
 import pickle
+import pandas as pd
 from wtforms import RadioField, BooleanField, SubmitField, StringField, SelectField, Form
 from application.db import get_db
 from application import mongo
@@ -14,6 +16,7 @@ hello_bp = Blueprint('hello_bp', __name__,
                      template_folder='templates', static_folder='static')
 
 select_dict = {}
+ncaa_rank_coll_team_list = []
 
 #access the mongodb via app.mongo
 @hello_bp.route('/',methods=['GET','POST'])
@@ -98,6 +101,60 @@ def teamsSelected(opponent1, opponent2):
         return((new_team1, new_team2, tm1_sorted,tm2_sorted))
         #function extractToCSV terminated w/above line
         
-    teamName1, teamName2, team1, team2 = extractToCSV(opponent1, opponent2)
+    teamName1, teamName2, ncaa_rank_coll_team1, ncaa_rank_coll_team2 = extractToCSV(opponent1, opponent2)
+    
+    #session level variable
+    ncaa_rank_coll_team_list.append(ncaa_rank_coll_team1)
+    ncaa_rank_coll_team_list.append(ncaa_rank_coll_team2)
     #teamName1 and teamName2 above are the data tables
     return render_template('/home/twoTable.html', containedList = [team1, team2], teamNameList = [teamName1, teamName2]) 
+
+@hello_bp.route('/mirrorChart/<opponent1>/<opponent2>', methods = ['GET','POST'])
+def renderMirror(opponent1, opponent2):
+    #each element of the stats_list (44 elements for each list) is a dictionary of compartmentalized stats of a particular category and aren't normalized to readily convert to df, so must loop through ea element within the list (separate dictionaries) and cherry pick the attribute of the category I care about
+    def extract(dic):
+        return [k for g,k in dic.items() if g in ['statlabel','Rank']]
+    
+    team1 = [extract(k) for k in lista_test[0]['stats_list']]
+    team2 = [extract(k) for k in lista_test[1]['stats_list']]
+    df1 = pd.DataFrame(team1, columns = ['statlabel','rank1'])
+    df2 = pd.DataFrame(team2, columns = ['statlabel','rank2'])
+    
+    #Concatenate the two separate team dataframes into one, and allow the rogue stat with a counterpart in each dataframe to dangle.
+    #set the row indexes equal to the statlabel so I can concatenate properly
+    df1.set_index('statlabel', inplace = True)
+    df2.set_index('statlabel', inplace = True)
+    
+    test = pd.concat([df1,df2], axis = 1)
+    test['diff'] = abs(test['rank2'] - test['rank1'])
+    test['rank2'] = test['rank2'] * -1
+
+    #add a categorical variable for the size of the discrepancy between rankings; 
+    #this variable will be used later to highlight bars on the barchart
+    cut_bins=[0,60,100]
+    cut_labels = ['normal','pronounced']
+    test['rank_disp'] = pd.cut(test['diff'], bins=cut_bins,     labels=cut_labels)
+    
+    data = [
+    go.Bar(x=test['rank1'], y=test.index, name=lista_test[0]['teamname']+ ' Ranks',  
+            orientation = "h", text = test['rank1'], textposition = 'outside'
+           ),
+    go.Bar(x=test['rank2'], y=test.index, name=lista_test[1]['teamname']+' Ranks', 
+           orientation = "h", text = abs(test['rank2']), textposition = 'outside'
+          )]
+layout = go.Layout(
+    barmode='overlay', height = 900, title = go.layout.Title(text="Side-by-side rankings")
+)
+
+fig = go.Figure(dict(data = data, layout = layout))
+
+fig.update_layout(
+    xaxis = dict(
+        tickmode = 'array',
+        tickvals = [-100,-75,-50,-25,0, 25, 50, 75, 100],
+        ticktext = ['100', '75','50','25','0','25', '50', '75', '100']
+    )
+)
+
+
+    return()
