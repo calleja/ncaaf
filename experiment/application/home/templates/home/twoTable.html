@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{{ url_for('hello_bp.static', filename='ncaaf.css') }}">
 <body>
 <h1> Tabular view: head-to-head stats </h1>
-<p> <a href="{{ url_for('hello_bp.renderMirror', opponent1 = opponent_html1, opponent2 = opponent_html2 ) }}">View in graphic</a>
+<p> <a href="{{ url_for('hello_bp.renderMirror', opponent1 = teamNameList[0], opponent2 = teamNameList[1] ) }}">View in graphic form</a>
     <div class = "leftTable">
 <table>
 <th> {{ teamNameList[0] }} </th><th></th>
