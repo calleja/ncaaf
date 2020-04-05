@@ -1,0 +1,25 @@
+{% extends "basepage.html" %}
+{% block content %}
+
+<head>
+<link rel="stylesheet" href="{{ url_for('hello_bp.static', filename='ncaaf.css' ) }}">
+</head>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<script src="https://d14fo0winaifog.cloudfront.net/plotly-basic.js"></script>
+
+<div class = "plotStyle">
+<!--height and width here control the sizing within the div; the entire size of the div is controlled at the css level because we apply inline-block-->
+<div class = "innerchart" style="height:200%; width:85%; text-align:center;" id="bargraph">
+    <script type="text/javascript">
+        var graphs = {{plot | safe}};
+        Plotly.plot('bargraph',graphs[0].data, graphs[0].layout || {});
+    </script>
+</div>
+</div>
+
+
+
+
+{% endblock %}
