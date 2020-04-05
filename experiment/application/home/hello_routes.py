@@ -5,11 +5,14 @@ import numpy as np
 import os
 import pymongo
 import plotly.express as px
+import plotly.graph_objects as go
 import pickle
+import plotly
 import pandas as pd
 from wtforms import RadioField, BooleanField, SubmitField, StringField, SelectField, Form
 from application.db import get_db
 from application import mongo
+import json
 
 #name of Blueprint obj = "hello_bp"
 hello_bp = Blueprint('hello_bp', __name__,
@@ -72,7 +75,7 @@ def statsLink():
 @hello_bp.route('/selectedTeamStats/<opponent1>/<opponent2>', methods = ['GET','POST'])
 def teamsSelected(opponent1, opponent2):    
     def extractToCSV(opponent1, opponent2):
-        ''' 1. query the database and extract team stats a/o latest date
+        ''' 1. query the database and extract team stats  a/o latest date
     2. separate each team into its own container
     3. sort the container so that team list matches same order
     4. measure the longest dict in ea container
@@ -103,20 +106,20 @@ def teamsSelected(opponent1, opponent2):
         
     teamName1, teamName2, ncaa_rank_coll_team1, ncaa_rank_coll_team2 = extractToCSV(opponent1, opponent2)
     
-    #session level variable
+    #session level variable: store the collection (unknown data format at this point) at a session-level dict
     ncaa_rank_coll_team_list.append(ncaa_rank_coll_team1)
     ncaa_rank_coll_team_list.append(ncaa_rank_coll_team2)
     #teamName1 and teamName2 above are the data tables
-    return render_template('/home/twoTable.html', containedList = [team1, team2], teamNameList = [teamName1, teamName2]) 
+    return render_template('/home/twoTable.html', containedList = [ncaa_rank_coll_team1, ncaa_rank_coll_team2], teamNameList = [teamName1, teamName2]) 
 
 @hello_bp.route('/mirrorChart/<opponent1>/<opponent2>', methods = ['GET','POST'])
 def renderMirror(opponent1, opponent2):
     #each element of the stats_list (44 elements for each list) is a dictionary of compartmentalized stats of a particular category and aren't normalized to readily convert to df, so must loop through ea element within the list (separate dictionaries) and cherry pick the attribute of the category I care about
     def extract(dic):
         return [k for g,k in dic.items() if g in ['statlabel','Rank']]
-    
-    team1 = [extract(k) for k in lista_test[0]['stats_list']]
-    team2 = [extract(k) for k in lista_test[1]['stats_list']]
+    #ncaa_rank_coll_team_list is a session-level list
+    team1 = [extract(k) for k in ncaa_rank_coll_team_list[0]]
+    team2 = [extract(k) for k in ncaa_rank_coll_team_list[1]]
     df1 = pd.DataFrame(team1, columns = ['statlabel','rank1'])
     df2 = pd.DataFrame(team2, columns = ['statlabel','rank2'])
     
@@ -135,20 +138,15 @@ def renderMirror(opponent1, opponent2):
     cut_labels = ['normal','pronounced']
     test['rank_disp'] = pd.cut(test['diff'], bins=cut_bins,     labels=cut_labels)
     
+    #the user defined "data" list and layout variable will be inserted as k,v in dict stored within figList
     data = [
-    go.Bar(x=test['rank1'], y=test.index, name=lista_test[0]['teamname']+ ' Ranks',  
+    go.Bar(x=test['rank1'], y=test.index, name=opponent2+ ' Ranks',  
             orientation = "h", text = test['rank1'], textposition = 'outside'
            ),
-    go.Bar(x=test['rank2'], y=test.index, name=lista_test[1]['teamname']+' Ranks', 
+    go.Bar(x=test['rank2'], y=test.index, name=opponent1+'  Ranks', 
            orientation = "h", text = abs(test['rank2']), textposition = 'outside'
           )]
-layout = go.Layout(
-    barmode='overlay', height = 900, title = go.layout.Title(text="Side-by-side rankings")
-)
-
-fig = go.Figure(dict(data = data, layout = layout))
-
-fig.update_layout(
+    layout = go.Layout(barmode='overlay', height = None, title = go.layout.Title(text="Side-by-side rankings"), margin=dict(l = 200),
     xaxis = dict(
         tickmode = 'array',
         tickvals = [-100,-75,-50,-25,0, 25, 50, 75, 100],
@@ -156,5 +154,13 @@ fig.update_layout(
     )
 )
 
+    #fig = go.Figure(dict(data = data, layout = layout))
+    #original version above, json encoding input below
+    #figList here follows the format from https://github.com/plotly/plotlyjs-flask-example/blob/master/app.py
+    figList = [dict(data = data, layout = layout)]
 
-    return()
+    #cls argument is a custom JSONEncoder subclass
+    #json dumps accepts as the obj argument a serializable python object; the native JSONEncoder class supports dict, list, tuple, etc ob... the subsequent script at the top of the html template does the work of go.Figure() - utilized in a standalone operation
+    graphJSON = json.dumps(figList, cls = plotly.utils.PlotlyJSONEncoder)
+
+    return(render_template('/home/mirrorPlot.html',plot = graphJSON))

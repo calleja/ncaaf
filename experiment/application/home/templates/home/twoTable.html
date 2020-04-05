@@ -1,9 +1,9 @@
 {% extends "basepage.html" %}
-
 {% block content %}
-<!--can move the title to a header so that it's displayed on the page, additionally, will link to the function that renders the mirror horizontal bar chart-->
+
 <title>Stats Table</title>
 <link rel="stylesheet" href="{{ url_for('hello_bp.static', filename='ncaaf.css') }}">
+
 <body>
 <h1> Tabular view: head-to-head stats </h1>
 <p> <a href="{{ url_for('hello_bp.renderMirror', opponent1 = teamNameList[0], opponent2 = teamNameList[1] ) }}">View in graphic form</a>
