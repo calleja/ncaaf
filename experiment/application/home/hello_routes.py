@@ -97,7 +97,6 @@ def teamsSelected(opponent1, opponent2):
     #select the team w/the shortest list to compose the sorted_list; if not, may generate key value errors later... forsort is set to the df w/the fewest records... and so the order may be rearranged
         forsort = ((new_team1,team1_li),(new_team2,team2_li))[np.argmin((len(team1_li),len(team2_li)))]
     #extract the stat headers of the shortest df
-        sorted_list = sorted([i['statlabel'] for i in forsort])
     #iterate two objects: 1) stats headers 2) stats dict for the team
         sorted_list = sorted([i['statlabel'] for i in forsort[1]])
     #iterate two objects: 1) stats headers 2) stats dict for the team
