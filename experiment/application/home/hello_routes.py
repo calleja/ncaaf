@@ -62,7 +62,7 @@ def rawStats(opponent1,opponent2):
 
 @hello_bp.route('/statsSelected', methods = ['GET','POST'])
 def statsLink():
-    #this page is currently served up via a hyperlink in the html template
+    #this page is currently served up via a hyperlink in the selection.html template
     #place the stats from the query results here
     with open('/home/merde/Documents/ncaaf/flask_app/experiment/application/home/objects/clemsonList.pickle', 'rb') as filename:
         clemson = pickle.load(filename)
@@ -74,6 +74,7 @@ def statsLink():
     
 @hello_bp.route('/selectedTeamStats/<opponent1>/<opponent2>', methods = ['GET','POST'])
 def teamsSelected(opponent1, opponent2):    
+    #this page is currently served up via a hyperlink in the selection.html template
     def extractToCSV(opponent1, opponent2):
         ''' 1. query the database and extract team stats  a/o latest date
     2. separate each team into its own container
@@ -82,7 +83,7 @@ def teamsSelected(opponent1, opponent2):
     5. write each list of dicts to csv in format encoded'''
         pipeline = [{"$match":{'teamname':{"$in":[opponent1, opponent2]}}}, 
         {"$project": {"teamname": 1, "stats_list": { "$filter":{"input":'$stats_list', 
-            "cond":{"$eq":["$$this.games_through",datetime.strptime("2019-10-19","%Y-%m-%d")]}}}}}]
+            "cond":{"$eq":["$$this.games_through",datetime.strptime("2019-11-30","%Y-%m-%d")]}}}}}]
         test = mongo.db['teststats'].aggregate(pipeline)
         lista_test = list(test)
     
@@ -93,15 +94,23 @@ def teamsSelected(opponent1, opponent2):
         team1_li = lista_test[0]['stats_list']
         team2_li = lista_test[1]['stats_list'] # will return a dict element
     
-    #select the team w/the shortest list to compose the sorted_list; if not, may generate key value errors later... forsort is set to the df w/the fewest records
-        forsort = (team1_li,team2_li)[np.argmin((len(team1_li),len(team2_li)))]
+    #select the team w/the shortest list to compose the sorted_list; if not, may generate key value errors later... forsort is set to the df w/the fewest records... and so the order may be rearranged
+        forsort = ((new_team1,team1_li),(new_team2,team2_li))[np.argmin((len(team1_li),len(team2_li)))]
     #extract the stat headers of the shortest df
         sorted_list = sorted([i['statlabel'] for i in forsort])
+    #iterate two objects: 1) stats headers 2) stats dict for the team
+        sorted_list = sorted([i['statlabel'] for i in forsort[1]])
     #iterate two objects: 1) stats headers 2) stats dict for the team
         tm1_sorted = [stat for i in sorted_list for stat in team1_li if stat['statlabel'] ==i]
     #iterate two objects: 1) stats headers 2) stats dict for the team
         tm2_sorted = [stat for i in sorted_list for stat in team2_li if stat['statlabel'] ==i]
-        return((new_team1, new_team2, tm1_sorted,tm2_sorted))
+        
+        if forsort[0] == new_team1:
+            team2 = new_team2
+        else:
+            team2 = new_team1
+            
+        return((forsort[0],team2,tm1_sorted,tm2_sorted))
         #function extractToCSV terminated w/above line
         
     teamName1, teamName2, ncaa_rank_coll_team1, ncaa_rank_coll_team2 = extractToCSV(opponent1, opponent2)
