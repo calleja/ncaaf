@@ -93,28 +93,27 @@ def teamsSelected(opponent1, opponent2):
     
         team1_li = lista_test[0]['stats_list']
         team2_li = lista_test[1]['stats_list'] # will return a dict element
-    
-    #select the team w/the shortest list to compose the sorted_list; if not, may generate key value errors later... forsort is set to the df w/the fewest records... and so the order may be rearranged
+        teamDataDict = {new_team1:team1_li,new_team2:team2_li}
+
+#select the team w/the shortest list to compose the sorted_list; if not, may generate key value errors later... forsort is set to the df w/the fewest records... and so the order may be rearranged
         forsort = ((new_team1,team1_li),(new_team2,team2_li))[np.argmin((len(team1_li),len(team2_li)))]
-    #extract the stat headers of the shortest df
-    #iterate two objects: 1) stats headers 2) stats dict for the team
+        newFirstTeam = forsort[0]
+        newSecondTeam = [i for i in teamDataDict.keys() if i != forsort[0]][0]
+#extract the stat headers of the shortest df
+#iterate two objects: 1) stats headers 2) stats dict for the team
         sorted_list = sorted([i['statlabel'] for i in forsort[1]])
     #iterate two objects: 1) stats headers 2) stats dict for the team
-        tm1_sorted = [stat for i in sorted_list for stat in team1_li if stat['statlabel'] ==i]
-    #iterate two objects: 1) stats headers 2) stats dict for the team
-        tm2_sorted = [stat for i in sorted_list for stat in team2_li if stat['statlabel'] ==i]
-        
-        if forsort[0] == new_team1:
-            team2 = new_team2
-        else:
-            team2 = new_team1
+        tm1_sorted = [stat for i in sorted_list for stat in forsort[1] if stat['statlabel'] ==i]
+#iterate two objects: 1) stats headers 2) stats dict for the team
+        tm2_sorted = [stat for i in sorted_list for stat in     teamDataDict[newSecondTeam] if stat['statlabel'] ==i]
             
-        return((forsort[0],team2,tm1_sorted,tm2_sorted))
+        return((forsort[0],newSecondTeam,tm1_sorted,tm2_sorted))
         #function extractToCSV terminated w/above line
         
     teamName1, teamName2, ncaa_rank_coll_team1, ncaa_rank_coll_team2 = extractToCSV(opponent1, opponent2)
     
     #session level variable: store the collection (unknown data format at this point) at a session-level dict
+    ncaa_rank_coll_team_list.clear()
     ncaa_rank_coll_team_list.append(ncaa_rank_coll_team1)
     ncaa_rank_coll_team_list.append(ncaa_rank_coll_team2)
     #teamName1 and teamName2 above are the data tables
@@ -148,10 +147,10 @@ def renderMirror(opponent1, opponent2):
     
     #the user defined "data" list and layout variable will be inserted as k,v in dict stored within figList
     data = [
-    go.Bar(x=test['rank1'], y=test.index, name=opponent2+ ' Ranks',  
+    go.Bar(x=test['rank1'], y=test.index, name=opponent1+ ' Ranks',  
             orientation = "h", text = test['rank1'], textposition = 'outside'
            ),
-    go.Bar(x=test['rank2'], y=test.index, name=opponent1+'  Ranks', 
+    go.Bar(x=test['rank2'], y=test.index, name=opponent2+'  Ranks', 
            orientation = "h", text = abs(test['rank2']), textposition = 'outside'
           )]
     layout = go.Layout(barmode='overlay', height = None, title = go.layout.Title(text="Side-by-side rankings"), margin=dict(l = 200),
