@@ -1,6 +1,7 @@
 from flask import Flask, g
 from flask_pymongo import PyMongo
 import datetime
+import os
 
 # Globally accessible libraries
 mongo = PyMongo()
@@ -24,7 +25,7 @@ def create_app():
     """Initialize the core application. Funct is called from wsgi.py"""
     #must set static_folder to None or blueprint specific static folders will be overriden
     app = Flask(__name__, instance_relative_config=False, static_folder = None)
-    app.config.from_object('config.Config') #a class sitting at the top-most directory (config.py); app.config is directory aware 
+    app.config.from_object('config.Config') #a class sitting at the top-most directory (config.py); app.config is directory aware
     
     # Initialize Plugins
     mongo.init_app(app)
