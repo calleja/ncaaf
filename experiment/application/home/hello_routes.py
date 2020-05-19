@@ -11,6 +11,7 @@ import plotly
 import pandas as pd
 from wtforms import RadioField, BooleanField, SubmitField, StringField, SelectField, Form
 from application.db import get_db
+#mongo is instantiated as a global variable in the application/__init__.py... it's possible that bc the blueprint is registered within the app_context, that this module has access to mongo
 from application import mongo
 import json
 
@@ -150,7 +151,7 @@ def renderMirror(opponent1, opponent2):
     go.Bar(x=test['rank1'], y=test.index, name=opponent1+ ' Ranks',  
             orientation = "h", text = test['rank1'], textposition = 'outside'
            ),
-    go.Bar(x=test['rank2'], y=test.index, name=opponent2+'  Ranks', 
+    go.Bar(x=test['rank2'], y=test.index, name=opponent2+' Ranks', 
            orientation = "h", text = abs(test['rank2']), textposition = 'outside'
           )]
     layout = go.Layout(barmode='overlay', height = None, title = go.layout.Title(text="Side-by-side rankings"), margin=dict(l = 200),
