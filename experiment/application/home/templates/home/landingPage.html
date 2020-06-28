@@ -36,9 +36,12 @@
 </div>
 {% endfor %}
 
-<a href="/dashapp/" class="dash-link">
+<p>
+<a href="{{ url_for('hello_bp.renderMirror', opponent1 = teamNameList[0], opponent2 = teamNameList[1] ) }}">View in graphic form</a>
+<a href="/dashapp/mapper" class="dash-link">
     <span>Embdedded Plotly Dash</span>
     <i class="fas fa-arrow-right"></i>
 </a>
+</p>
 
 {% endblock %}

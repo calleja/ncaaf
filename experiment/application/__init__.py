@@ -1,3 +1,4 @@
+# APP FACTORY FORMAT #
 from flask import Flask, g
 from flask_pymongo import PyMongo
 import datetime
@@ -52,10 +53,13 @@ def create_app():
         
         #hello_bp is a Blueprint object
         from .home.hello_routes import hello_bp
+        from .home.plotlydash.bardashboard import create_dashboard
         
         #case when the landing page is in the same folder as the applicaiton initi; look for a "routes.py"
 
         # Register Blueprints within context so that scope of all variables includes the runtime workspace of these blueprints
         app.register_blueprint(hello_bp)
+        
+        app = create_dashboard(app)
         
     return app
