@@ -1,0 +1,10 @@
+a) https://dash.plotly.com/
+b) https://dash.plotly.com/layout
+c) https://github.com/plotly/dash/issues/214
+d) https://stackoverflow.com/questions/45845872/running-a-dash-app-within-a-flask-app/45849050
+e) https://github.com/plotly/dash/issues/752
+f) https://dash.plotly.com/urls
+g) https://community.plotly.com/t/embed-multipage-dash-app-in-existing-flask-app-with-dash-bootstrap-components/34773
+h) https://stackoverflow.com/questions/56754167/how-to-access-flask-apps-context-from-within-embedded-dash-app-when-using-app-f
+i) https://community.plotly.com/t/using-app-factory-pattern-with-dash/24898/2
+j) https://hackersandslackers.com/flask-application-factory/
