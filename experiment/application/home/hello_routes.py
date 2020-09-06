@@ -172,3 +172,9 @@ def renderMirror(opponent1, opponent2):
     graphJSON = json.dumps(figList, cls = plotly.utils.PlotlyJSONEncoder)
 
     return(render_template('/home/mirrorPlot.html',plot = graphJSON))
+
+@hello_bp.route('/dash-flask/<opponent1>/<opponent2>/',methods=['GET','POST'])
+def callDash(opponent1, opponent2):
+    print('these are the team name vairables: {} and {}'.format(opponent1,opponent2))
+    path = '/dashapp/' + opponent1 + '/' + opponent2 + '/'
+    return redirect(path)

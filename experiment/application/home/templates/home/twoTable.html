@@ -8,11 +8,14 @@
 <h1> Tabular view: head-to-head stats </h1>
 <p> <a href="{{ url_for('hello_bp.renderMirror', opponent1 = teamNameList[0], opponent2 = teamNameList[1] ) }}">View in graphic form</a>
 <p>
+<p> <a href="{{ url_for('hello_bp.callDash', opponent1 = teamNameList[0], opponent2 = teamNameList[1] ) }}">Dash via flask link</a>
+<p>
 <a href="{{ url_for('.teamsSelected', opponent1 = opponent_html1, opponent2 = opponent_html2 ) }}">View Team Stats</a>
+<!--
 <a href="/dashapp/<opponent1>/<opponent2>/" class="dash-link">
     <span>Embdedded Plotly Dash having routes</span>
     <i class="fas fa-arrow-right"></i>
-</a>
+</a> -->
 </p>
     <div class = "leftTable">
 <table>
