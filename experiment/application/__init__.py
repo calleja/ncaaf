@@ -53,13 +53,13 @@ def create_app():
         
         #hello_bp is a Blueprint object
         from .home.hello_routes import hello_bp
-        from .home.plotlydash.bardashboard import create_dashboard
+        from .home.plotlydash.dropdownAppConstruction_flask_dashserver_TESTING_callbackFunct import controller
         
         #case when the landing page is in the same folder as the applicaiton initi; look for a "routes.py"
 
         # Register Blueprints within context so that scope of all variables includes the runtime workspace of these blueprints
         app.register_blueprint(hello_bp)
         
-        app = create_dashboard(app)
+        app = controller(app)
         
     return app
